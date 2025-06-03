@@ -27,4 +27,3 @@ if metodos:
     print("Método de pagamento processado:", escolhido)
 else:
     print("Nenhum método disponível na fila.")
-
