@@ -13,15 +13,13 @@ print(vetor)
 
 import sys
 import random
-vaga_desejada = input("deseja se candidatar a qual vaga? 1-Pedreiro 2-Programador 3-Engenheiro 4-youtuber: ")
+vaga_desejada = input("deseja se candidatar a qual vaga? 1-Pedreiro 2-Programador 3-Engenheiro: ")
 if (vaga_desejada == "1"):
   print("Pedreiro")
 elif (vaga_desejada == "2"):
   print("Programador")
 elif (vaga_desejada == "3"):
   print("Engenheiro")
-elif (vaga_desejada == "4"):
-  print("youtuber")
 else:
   sys.exit("vaga não encontrada")
 vetor = ["Marcos","Pablo_clone","Pablo","Luiz"]
