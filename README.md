@@ -111,4 +111,3 @@ Este projeto é livre para fins **educacionais** e pode ser utilizado como base 
 
 ---
 
-Se quiser, posso gerar esse conteúdo como um arquivo `README.md` para download. Deseja?
