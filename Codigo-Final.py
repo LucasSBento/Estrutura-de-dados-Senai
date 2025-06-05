@@ -1,32 +1,34 @@
 from collections import deque
 
-# ========== ESTRUTURAS GLOBAIS ==========
-usuarios = [{
-    "nome": "admin",
-    "idade": "30",
-    "email": "admin@example.com",
-    "senha": "admin",
-    "is_admin": True
-}]
-usuario_logado = None
+# ========== ESTRUTURAS DE DADOS ==========
+# Matriz de usuários [nome, idade, email, senha, is_admin]
+usuarios = [
+    ["admin", "30", "admin@example.com", "admin", True]
+]
+
+# Vetor para produtos (vagas)
 produtos = []
+
+# Pilha para carrinho (LIFO)
+carrinho = []
+
+# Fila para métodos de pagamento (FIFO)
 metodos_pagamento = deque(["Dinheiro", "Pix", "Cartão"])
 
-# ========== FUNÇÕES DE AUTENTICAÇÃO ==========
+# Variável para controle de login
+usuario_logado = None
+
+# ========== SISTEMA DE AUTENTICAÇÃO ==========
 def cadastrar_usuario():
     print("\n=== CADASTRO ===")
-    nome = input("Digite um nome de usuário: ")
-    idade = input("Digite sua idade: ")
-    email = input("Digite seu email: ")
-    senha = input("Digite uma senha: ")
-    
-    usuarios.append({
-        "nome": nome,
-        "idade": idade,
-        "email": email,
-        "senha": senha,
-        "is_admin": False
-    })
+    novo_usuario = [
+        input("Digite um nome de usuário: "),
+        input("Digite sua idade: "),
+        input("Digite seu email: "),
+        input("Digite uma senha: "),
+        False  # is_admin
+    ]
+    usuarios.append(novo_usuario)
     print("Usuário cadastrado com sucesso!\n")
 
 def login():
@@ -35,9 +37,9 @@ def login():
     nome = input("Usuário: ")
     senha = input("Senha: ")
 
-    for usuario in usuarios:
-        if usuario["nome"] == nome and usuario["senha"] == senha:
-            usuario_logado = usuario
+    for user in usuarios:
+        if user[0] == nome and user[3] == senha:
+            usuario_logado = user
             print(f"\nBem-vindo(a), {nome}!")
             return
     print("\nCredenciais inválidas!")
@@ -47,8 +49,8 @@ def logout():
     usuario_logado = None
     print("\nLogout realizado com sucesso!")
 
-# ========== SISTEMA DE PRODUTOS ==========
-def gerenciar_produtos():
+# ========== SISTEMA DE VAGAS ==========
+def gerenciar_vagas():
     while True:
         print("\n=== GERENCIAR VAGAS ===")
         print("1. Adicionar vaga")
@@ -57,75 +59,70 @@ def gerenciar_produtos():
         opcao = input("Escolha: ")
 
         if opcao == "1":
-            novo_produto = input("Nome da vaga: ")
-            produtos.append(novo_produto)
-            print(f"'{novo_produto}' adicionado!")
+            produtos.append(input("Nome da vaga: "))
+            print("Vaga adicionada!")
         elif opcao == "2":
-            print("\nVagas disponíveis:")
-            for idx, item in enumerate(produtos, 1):
-                print(f"{idx}. {item}")
+            print("\nVagas disponíveis:" if produtos else "\nNenhuma vaga cadastrada")
+            for i, vaga in enumerate(produtos, 1):
+                print(f"{i}. {vaga}")
         elif opcao == "3":
             break
         else:
             print("Opção inválida!")
 
 # ========== SISTEMA DE CARRINHO ==========
-def gerenciar_carrinho():
-    carrinho = []
+def gerenciar_candidaturas():
     while True:
-        print("\n=== CARRINHO ===")
-        print("1. Adicionar vaga")
-        print("2. Remover última vaga")
-        print("3. Ver carrinho")
-        print("4. Finalizar compra")
+        print("\n=== CARRINHO DE VAGAS ===")
+        print("1. Candidatar-se a vaga")
+        print("2. Remover última candidatura")
+        print("3. Ver candidaturas")
+        print("4. Finalizar inscrições")
         print("5. Voltar")
         opcao = input("Escolha: ")
 
         if opcao == "1":
             print("\nVagas disponíveis:")
-            for idx, item in enumerate(produtos, 1):
-                print(f"{idx}. {item}")
+            for i, vaga in enumerate(produtos, 1):
+                print(f"{i}. {vaga}")
             try:
                 escolha = int(input("Número da vaga: ")) - 1
                 carrinho.append(produtos[escolha])
-                print(f"{produtos[escolha]} adicionado!")
+                print(f"Candidatura para '{produtos[escolha]}' realizada!")
             except:
-                print("Erro na seleção!")
+                print("Seleção inválida!")
         
         elif opcao == "2":
             if carrinho:
-                print(f"{carrinho.pop()} removido!")
+                print(f"Candidatura removida: {carrinho.pop()}")
             else:
                 print("Carrinho vazio!")
         
         elif opcao == "3":
-            print("\nSeu carrinho:")
-            for item in carrinho:
-                print(f"- {item}")
+            print("\nSuas candidaturas:" if carrinho else "\nNenhuma candidatura")
+            for vaga in reversed(carrinho):
+                print(f"- {vaga}")
         
         elif opcao == "4":
             if not carrinho:
-                print("Carrinho vazio!")
+                print("Nenhuma candidatura para processar!")
                 continue
-                
-            print("\n=== PAGAMENTO ===")
-            print("Métodos disponíveis:", list(metodos_pagamento))
-            
-            if metodos_pagamento:
+
+            print("\n=== PROCESSO DE INSCRIÇÃO ===")
+            while metodos_pagamento:
                 metodo = metodos_pagamento.popleft()
-                print(f"\nPagamento com {metodo} aprovado!")
+                print(f"\nProcessando pagamento via {metodo}...")
                 
-                print("\n=== RESUMO DA COMPRA ===")
-                for item in carrinho:
-                    print(f"- {item}")
-                
-                print("\n=== DADOS DO CLIENTE ===")
-                print(f"Nome: {usuario_logado['nome']}")
-                print(f"Email: {usuario_logado['email']}")
-                print("\nObrigado pela compra!")
+                print("\n=== RESUMO FINAL ===")
+                print("Vagas:", ", ".join(carrinho))
+                print("\nDados do Candidato:")
+                print(f"Nome: {usuario_logado[0]}")
+                print(f"Email: {usuario_logado[2]}")
+                print("\nInscrição concluída com sucesso!")
+                carrinho.clear()
                 return
-            else:
-                print("Nenhum método disponível!")
+            
+            print("Nenhum método de pagamento disponível!")
         
         elif opcao == "5":
             return
@@ -133,21 +130,21 @@ def gerenciar_carrinho():
         else:
             print("Opção inválida!")
 
-# ========== MENUS PRINCIPAIS ==========
+# ========== MENUS ==========
 def menu_admin():
     while True:
         print("\n=== PAINEL ADMIN ===")
         print("1. Gerenciar vagas")
-        print("2. Ver usuários cadastrados")
+        print("2. Ver candidatos")
         print("3. Sair")
         opcao = input("Escolha: ")
 
         if opcao == "1":
-            gerenciar_produtos()
+            gerenciar_vagas()
         elif opcao == "2":
-            print("\nUsuários cadastrados:")
+            print("\nCandidatos cadastrados:")
             for user in usuarios:
-                print(f"Nome: {user['nome']} | Email: {user['email']}")
+                print(f"Nome: {user[0]} | Email: {user[2]}")
         elif opcao == "3":
             return
         else:
@@ -155,18 +152,18 @@ def menu_admin():
 
 def menu_usuario():
     while True:
-        print("\n=== LOJA VIRTUAL ===")
-        print("1. Ver vagas")
-        print("2. Carrinho")
+        print("\n=== SISTEMA DE VAGAS ===")
+        print("1. Ver vagas disponíveis")
+        print("2. Gerenciar candidaturas")
         print("3. Sair")
         opcao = input("Escolha: ")
 
         if opcao == "1":
-            print("\nVagas disponíveis:")
-            for idx, item in enumerate(produtos, 1):
-                print(f"{idx}. {item}")
+            print("\nVagas disponíveis:" if produtos else "\nNenhuma vaga disponível")
+            for i, vaga in enumerate(produtos, 1):
+                print(f"{i}. {vaga}")
         elif opcao == "2":
-            gerenciar_carrinho()
+            gerenciar_candidaturas()
         elif opcao == "3":
             return
         else:
@@ -174,7 +171,7 @@ def menu_usuario():
 
 def menu_principal():
     while True:
-        print("\n=== SISTEMA DE COMPRAS ===")
+        print("\n=== SISTEMA DE RECRUTAMENTO ===")
         print("1. Login")
         print("2. Cadastrar")
         print("3. Sair")
@@ -183,7 +180,7 @@ def menu_principal():
         if opcao == "1":
             login()
             if usuario_logado:
-                if usuario_logado["is_admin"]:
+                if usuario_logado[4]:  # Acessa is_admin
                     menu_admin()
                 else:
                     menu_usuario()
@@ -196,6 +193,6 @@ def menu_principal():
         else:
             print("Opção inválida!")
 
-# ========== INICIO DO SISTEMA ==========
+# ========== EXECUÇÃO ==========
 if __name__ == "__main__":
     menu_principal()
