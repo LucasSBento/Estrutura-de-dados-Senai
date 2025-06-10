@@ -3,7 +3,7 @@ from collections import deque
 # ========== ESTRUTURAS DE DADOS ==========
 # Matriz de usuários [nome, idade, email, senha, is_admin]
 usuarios = [
-    ["admin", "30", "admin@example.com", "admin", True]
+    ["admin", "17", "admin@example.com", "admin", True]
 ]
 
 # Vetor para produtos (vagas)
@@ -26,7 +26,7 @@ def cadastrar_usuario():
         input("Digite sua idade: "),
         input("Digite seu email: "),
         input("Digite uma senha: "),
-        False  # is_admin
+        False
     ]
     usuarios.append(novo_usuario)
     print("Usuário cadastrado com sucesso!\n")
